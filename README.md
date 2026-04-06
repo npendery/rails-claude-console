@@ -1,8 +1,8 @@
-# ClaudeConsole
+# RailsClaude
 
 Chat with Claude AI directly inside your Rails console, with automatic Rails context.
 
-ClaudeConsole drops an AI assistant into `rails c` that already knows your app's models, environment, and Ruby/Rails versions. Ask questions in plain English, get back ActiveRecord queries, debugging help, and code you can auto-execute — all without leaving the REPL.
+RailsClaude drops an AI assistant into `rails c` that already knows your app's models, environment, and Ruby/Rails versions. Ask questions in plain English, get back ActiveRecord queries, debugging help, and code you can auto-execute — all without leaving the REPL.
 
 ## Installation
 
@@ -10,7 +10,7 @@ Add the gem to your development group:
 
 ```ruby
 group :development do
-  gem "claude_console"
+  gem "rails_claude"
 end
 ```
 
@@ -36,10 +36,10 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ### Optional Configuration
 
-Create an initializer at `config/initializers/claude_console.rb` to customize behavior:
+Create an initializer at `config/initializers/rails_claude.rb` to customize behavior:
 
 ```ruby
-ClaudeConsole.configure do |config|
+RailsClaude.configure do |config|
   config.api_key    = ENV["ANTHROPIC_API_KEY"]   # default
   config.model      = "claude-opus-4-6"          # default
   config.max_tokens = 1024                        # default
@@ -58,7 +58,7 @@ end
 
 #### Auto-generated System Prompt
 
-By default, ClaudeConsole builds a system prompt that includes:
+By default, RailsClaude builds a system prompt that includes:
 
 - Your application name
 - All detected model classes (ApplicationRecord descendants)
@@ -69,10 +69,10 @@ This gives Claude immediate awareness of your app's structure without any manual
 
 ## Usage
 
-When you start `rails c`, ClaudeConsole loads automatically and prints available commands:
+When you start `rails c`, RailsClaude loads automatically and prints available commands:
 
 ```
-✦ ClaudeConsole ready. (safe mode)
+✦ RailsClaude ready. (safe mode)
   claude "question"            — chat
   claude_run! "question"       — chat + auto-eval code
   claude_load_model User       — load a model for analysis
@@ -167,7 +167,7 @@ claude_reset!
 
 ### `claude_session` — Access the Session Object
 
-For advanced usage, access the underlying `ClaudeConsole::Session` instance directly.
+For advanced usage, access the underlying `RailsClaude::Session` instance directly.
 
 ```ruby
 session = claude_session
@@ -217,13 +217,13 @@ Safe mode prevents `claude_run!` from making any persistent changes to your data
 Safe mode is **on by default in production** and off in development/test. You'll see the current mode in the startup banner:
 
 ```
-✦ ClaudeConsole ready. (safe mode)
+✦ RailsClaude ready. (safe mode)
 ```
 
 or:
 
 ```
-✦ ClaudeConsole ready. (unrestricted)
+✦ RailsClaude ready. (unrestricted)
 ```
 
 The system prompt also instructs Claude to only generate read-only code when safe mode is active.
@@ -232,12 +232,12 @@ The system prompt also instructs Claude to only generate read-only code when saf
 
 ```ruby
 # Force safe mode on in development
-ClaudeConsole.configure do |config|
+RailsClaude.configure do |config|
   config.safe_mode = true
 end
 
 # Disable safe mode in production (use with caution)
-ClaudeConsole.configure do |config|
+RailsClaude.configure do |config|
   config.safe_mode = false
 end
 ```
@@ -257,7 +257,7 @@ For full isolation in production, consider restricting the database user's permi
 
 ## How It Works
 
-ClaudeConsole uses a Rails [Railtie](https://api.rubyonrails.org/classes/Rails/Railtie.html) to hook into console startup. When `rails c` loads:
+RailsClaude uses a Rails [Railtie](https://api.rubyonrails.org/classes/Rails/Railtie.html) to hook into console startup. When `rails c` loads:
 
 1. **Eager loads** the application to discover all model classes
 2. **Creates a session** with an Anthropic API client and auto-generated system prompt

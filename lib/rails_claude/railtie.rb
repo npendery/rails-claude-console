@@ -1,9 +1,9 @@
-module ClaudeConsole
+module RailsClaude
   class Railtie < Rails::Railtie
     console do
       Rails.application.eager_load!
 
-      session = ClaudeConsole::Session.new
+      session = RailsClaude::Session.new
 
       Object.define_method(:claude)            { |msg|   session.ask(msg) }
       Object.define_method(:claude_run!)       { |msg, **opts| session.ask_and_run(msg, **opts) }
@@ -15,8 +15,8 @@ module ClaudeConsole
       Object.define_method(:claude_safe_mode!) { |enabled = true| session.set_safe_mode(enabled) }
       Object.define_method(:claude_unsafe_mode!) { session.set_safe_mode(false) }
 
-      mode = ClaudeConsole.configuration.safe_mode? ? "\e[32m(safe mode)\e[0m" : "\e[33m(unrestricted)\e[0m"
-      puts "\e[35m✦ ClaudeConsole ready.\e[0m #{mode}"
+      mode = RailsClaude.configuration.safe_mode? ? "\e[32m(safe mode)\e[0m" : "\e[33m(unrestricted)\e[0m"
+      puts "\e[35m✦ RailsClaude ready.\e[0m #{mode}"
       puts "  \e[36mclaude\e[0m \"question\"           — chat"
       puts "  \e[36mclaude_run!\e[0m \"question\"       — chat + auto-eval code"
       puts "  \e[36mclaude_load_model\e[0m User         — load a model for analysis"

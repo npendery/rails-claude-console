@@ -1,11 +1,11 @@
 require "anthropic"
 
-module ClaudeConsole
+module RailsClaude
   class Session
     attr_reader :history
 
     def initialize
-      @config  = ClaudeConsole.configuration
+      @config  = RailsClaude.configuration
       @client  = Anthropic::Client.new(api_key: @config.api_key)
       @history = []
     end

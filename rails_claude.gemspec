@@ -1,8 +1,8 @@
-require_relative "lib/claude_console/version"
+require_relative "lib/rails_claude/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "claude_console"
-  spec.version     = ClaudeConsole::VERSION
+  spec.name        = "rails_claude"
+  spec.version     = RailsClaude::VERSION
   spec.authors     = ["Nick Pendery"]
   spec.email       = ["npendery@homebot.ai"]
   spec.summary     = "Chat with Claude inside your Rails console"

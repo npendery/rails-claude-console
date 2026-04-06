@@ -1,4 +1,4 @@
-module ClaudeConsole
+module RailsClaude
   class Configuration
     attr_accessor :api_key, :model, :max_tokens, :system_prompt, :safe_mode
 
