@@ -13,7 +13,8 @@ module ClaudeConsole
       Object.define_method(:claude_history)    { session.show_history }
       Object.define_method(:claude_session)    { session }
 
-      puts "\e[35m✦ ClaudeConsole ready.\e[0m"
+      mode = ClaudeConsole.configuration.safe_mode? ? "\e[32m(safe mode)\e[0m" : "\e[33m(unrestricted)\e[0m"
+      puts "\e[35m✦ ClaudeConsole ready.\e[0m #{mode}"
       puts "  \e[36mclaude\e[0m \"question\"           — chat"
       puts "  \e[36mclaude_run!\e[0m \"question\"       — chat + auto-eval code"
       puts "  \e[36mclaude_load_model\e[0m User         — load a model for analysis"

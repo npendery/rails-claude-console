@@ -44,7 +44,8 @@ module ClaudeConsole
         code = extract_code(reply)
         break unless code
 
-        puts "\e[33m⚡ Running:\e[0m\n#{code}\n"
+        run_label = @config.safe_mode? ? "\e[33m🔒 Running (safe mode):\e[0m" : "\e[33m⚡ Running:\e[0m"
+        puts "#{run_label}\n#{code}\n"
         result = safe_eval(code)
         puts "\e[32m⮕ Result:\e[0m #{result}\n\n"
 
@@ -101,12 +102,25 @@ module ClaudeConsole
     end
 
     def safe_eval(code)
-      result = eval(code) # rubocop:disable Security/Eval
-      result.inspect
+      if @config.safe_mode?
+        safe_eval_readonly(code)
+      else
+        result = eval(code) # rubocop:disable Security/Eval
+        result.inspect
+      end
     rescue StandardError => e
       err = "#{e.class}: #{e.message}"
       @history << { role: "user", content: "That code raised an error: #{err}" }
       "\e[31mError — #{err}\e[0m"
+    end
+
+    def safe_eval_readonly(code)
+      output = nil
+      ActiveRecord::Base.transaction do
+        output = eval(code).inspect # rubocop:disable Security/Eval
+        raise ActiveRecord::Rollback
+      end
+      output
     end
 
     def source_path_for(klass)
