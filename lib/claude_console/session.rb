@@ -68,6 +68,16 @@ module ClaudeConsole
       inject_file(full_path, label: path)
     end
 
+    def set_safe_mode(enabled)
+      @config.safe_mode = enabled
+      if enabled
+        puts "\e[32m🔒 Safe mode enabled — code runs in rolled-back transactions.\e[0m"
+      else
+        puts "\e[33m⚠ Safe mode disabled — code will execute with full write access.\e[0m"
+      end
+      nil
+    end
+
     def reset!
       @history = []
       puts "→ Conversation history cleared."

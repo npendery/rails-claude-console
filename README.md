@@ -72,11 +72,12 @@ This gives Claude immediate awareness of your app's structure without any manual
 When you start `rails c`, ClaudeConsole loads automatically and prints available commands:
 
 ```
-✦ ClaudeConsole ready.
+✦ ClaudeConsole ready. (safe mode)
   claude "question"            — chat
   claude_run! "question"       — chat + auto-eval code
   claude_load_model User       — load a model for analysis
   claude_load_file "path/to/f" — load any file for analysis
+  claude_safe_mode! / claude_unsafe_mode!
   claude_history / claude_reset!
 ```
 
@@ -139,6 +140,22 @@ Display all messages in the current session. User messages appear in cyan, Claud
 ```ruby
 claude_history
 ```
+
+### `claude_safe_mode!` / `claude_unsafe_mode!` — Toggle Safe Mode
+
+Switch between safe and unrestricted modes during a session without restarting the console.
+
+```ruby
+claude_unsafe_mode!
+# ⚠ Safe mode disabled — code will execute with full write access.
+
+claude_run! "create a test user"  # this will persist
+
+claude_safe_mode!
+# 🔒 Safe mode enabled — code runs in rolled-back transactions.
+```
+
+`claude_safe_mode!` also accepts a boolean: `claude_safe_mode!(false)` is equivalent to `claude_unsafe_mode!`.
 
 ### `claude_reset!` — Clear History
 
